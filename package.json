@@ -10,7 +10,8 @@
     "react",
     "component",
     "tooltip",
-    "UI"
+    "UI",
+    "frontend"
   ],
   "author": "Johnny Fekete",
   "license": "MIT"
