@@ -1,6 +1,6 @@
 {
   "name": "elegant-react-tooltip",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple tooltip component that automatically positions itself and provides a seamless user experience",
   "main": "index.js",
   "scripts": {
