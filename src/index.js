@@ -14,18 +14,29 @@ let tooltipTimeout;
 let hideTooltipTimeout;
 
 class ElegantReactTooltip extends Component {
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      delayBeforeTooltip: props.delayBeforeTooltip,
+      keepTooltipAlive: props.keepTooltipAlive
+    }
+
+    console.log(this.state);
+  }
+
   enableTooltip = (id, position) => {
     clearTimeout(tooltipTimeout);
     tooltipTimeout = setTimeout(() => {
       tooltipState.visible = true;
       this.setState({});
-    }, 1000);
+    }, this.state.delayBeforeTooltip);
 
     tooltipState.enabled = true;
     tooltipState.selected = id;
     tooltipState.position = position;
     this.setState({});
-  };
+  }
 
   disableTooltip = () => {
     clearTimeout(hideTooltipTimeout);
@@ -34,24 +45,39 @@ class ElegantReactTooltip extends Component {
         tooltipState.visible = false;
         this.setState({});
       }
-    }, 500);
+    }, this.state.keepTooltipAlive);
 
     tooltipState.enabled = false;
     tooltipState.selected = null;
     tooltipState.position = {};
     this.setState({});
-  };
+  }
 
   render() {
+    const { delayBeforeTooltip, keepTooltipAlive, ...rest } = this.props;
     return (
       <SensitiveArea
-        {...this.props}
+        {...rest}
         enableTooltip={this.enableTooltip}
         disableTooltip={this.disableTooltip}
         {...tooltipState}
       />
     );
   }
+}
+
+ElegantReactTooltip.propTypes = {
+  tag: PropTypes.string,
+  label: PropTypes.string,
+  delayBeforeTooltip: PropTypes.number,
+  keepTooltipAlive: PropTypes.number
+}
+
+ElegantReactTooltip.defaultProps = {
+  tag: 'div',
+  label: '',
+  delayBeforeTooltip: 500,
+  keepTooltipAlive: 1000
 }
 
 export default ElegantReactTooltip;
