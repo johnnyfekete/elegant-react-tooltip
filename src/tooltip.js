@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
 const topGutter = 7;
@@ -11,6 +12,12 @@ export default class Tooltip extends Component {
 
     this.tooltipRef = React.createRef();
 
+    // The tooltip has to be appended to the body, to ensure the proper absolute position
+    // and set the z-index to the highest of the body's children
+    this.tooltipContainerElement = document.createElement('div');
+    const highestZ = getHighestZ();
+    this.tooltipContainerElement.style.zIndex = highestZ + 1;
+
     this.state = {
       width: null,
       visible: false
@@ -18,11 +25,19 @@ export default class Tooltip extends Component {
   }
 
   componentDidMount() {
+    // Append the container to the body
+    document.body.appendChild(this.tooltipContainerElement);
+
     const tooltip = this.tooltipRef.current;
     this.setState({
       width: tooltip.offsetWidth,
       visible: true
     });
+  }
+
+  componentWillUnmount() {
+    // Remove the container from the body
+    document.body.removeChild(this.tooltipContainerElement);
   }
 
   render() {
@@ -42,21 +57,41 @@ export default class Tooltip extends Component {
       arrowStyle.left = `${position.left + position.width / 2 - left}px`;
     }
 
-    return (
-      <div
-        className="er-tooltip"
-        style={{
-          left: `${left}px`,
-          top: `${top}px`,
-          opacity: visible ? 1 : 0
-        }}
-        ref={this.tooltipRef}
-      >
-        <div className="er-tooltip-content">{label}</div>
-        <span className="er-tooltip-arrow" style={arrowStyle} />
-      </div>
+    return ReactDOM.createPortal(
+      (
+        <div
+          className="er-tooltip"
+          style={{
+            left: `${left}px`,
+            top: `${top}px`,
+            opacity: visible ? 1 : 0
+          }}
+          ref={this.tooltipRef}
+        >
+          <div className="er-tooltip-content">{label}</div>
+          <span className="er-tooltip-arrow" style={arrowStyle} />
+        </div>
+      ),
+      this.tooltipContainerElement,
     );
   }
+}
+
+// Find the highest Z index of the child elements of the body
+const getHighestZ = () => {
+  let highestZIndex = 0;
+  const elements = document.querySelectorAll('body > *');
+  elements.forEach(element => {
+    const zIndex = (element.style && element.style.zIndex) ?
+      parseInt(element.style.zIndex) :
+      0;
+
+    if (zIndex > highestZIndex) {
+      highestZIndex = zIndex;
+    }
+  });
+
+  return highestZIndex;
 }
 
 Tooltip.propTypes = {
