@@ -30,7 +30,7 @@ export default class Tooltip extends Component {
 
     const tooltip = this.tooltipRef.current;
     this.setState({
-      width: tooltip.offsetWidth,
+      width: tooltip.getElementsByClassName('er-tooltip-content')[0].offsetWidth,
       visible: true
     });
   }
@@ -47,7 +47,9 @@ export default class Tooltip extends Component {
     // calculate position and arrow position
     const top = position.top + position.height + topGutter;
     let left = position.left + position.width / 2 - width / 2;
-    const arrowStyle = {};
+    const arrowStyle = {
+      left: `${width / 2}px`
+    };
     if (left < leftGutter) {
       left = leftGutter;
       arrowStyle.left = `${position.left + position.width / 2 - left}px`;

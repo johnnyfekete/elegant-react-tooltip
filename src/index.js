@@ -21,8 +21,6 @@ class ElegantReactTooltip extends Component {
       delayBeforeTooltip: props.delayBeforeTooltip,
       keepTooltipAlive: props.keepTooltipAlive
     }
-
-    console.log(this.state);
   }
 
   enableTooltip = (id, position) => {
