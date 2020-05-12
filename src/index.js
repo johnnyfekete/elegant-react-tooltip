@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import SensitiveArea from './sensitive-area';
-import './style.css';
 
 const tooltipState = {
   enabled: false,

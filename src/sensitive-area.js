@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from './tooltip';
-import './style.css';
 
 const uuidv4 = () => {
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
@@ -27,7 +26,7 @@ const SensitiveArea = ({
   const [uuid] = useState(uuidv4());
 
   return (
-    <>
+    <Fragment>
       <component.tag
         onMouseEnter={e => {
           enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
@@ -40,7 +39,7 @@ const SensitiveArea = ({
       {visible && selected === uuid && (
         <Tooltip label={label} position={position} />
       )}
-    </>
+    </Fragment>
   );
 };
 
