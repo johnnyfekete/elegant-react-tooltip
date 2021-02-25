@@ -6,13 +6,15 @@ const topGutter = 7;
 const leftGutter = 7;
 const rightGutter = 7;
 
+let tooltipContainerElement;
+
 const Tooltip = ({ position, label }) => {
   const [width, setWidth] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const highestZ = getHighestZ();
 
   const tooltipRef = useRef();
-  let tooltipContainerElement;
 
   useEffect(() => {
     // The tooltip has to be appended to the body, to ensure the proper absolute position
@@ -23,17 +25,23 @@ const Tooltip = ({ position, label }) => {
     // Append the container to the body
     document.body.appendChild(tooltipContainerElement);
 
-    const tooltip = tooltipRef.current;
-    setWidth(
-      tooltip.getElementsByClassName('er-tooltip-content')[0].offsetWidth,
-    );
-    setVisible(true);
+    setLoaded(true);
 
     return () => {
       // Remove the container from the body
       document.body.removeChild(tooltipContainerElement);
     };
-  });
+  }, []);
+
+  useEffect(() => {
+    const tooltip = tooltipRef.current;
+    if (tooltip) {
+      setWidth(
+        tooltip.getElementsByClassName('er-tooltip-content')[0].offsetWidth,
+      );
+      setVisible(true);
+    }
+  }, [loaded]);
 
   // calculate position and arrow position
   const top = position.top + position.height + topGutter;
@@ -48,6 +56,10 @@ const Tooltip = ({ position, label }) => {
   if (left + width > window.innerWidth - rightGutter) {
     left = window.innerWidth - rightGutter - width;
     arrowStyle.left = `${position.left + position.width / 2 - left}px`;
+  }
+
+  if (!tooltipContainerElement) {
+    return null;
   }
 
   return ReactDOM.createPortal(
@@ -81,7 +93,7 @@ const Tooltip = ({ position, label }) => {
 const getHighestZ = () => {
   let highestZIndex = 0;
   const elements = document.querySelectorAll('*');
-  elements.forEach((element) => {
+  elements.forEach(element => {
     const style = getComputedStyle(element);
     const zIndex = style.zIndex ? parseInt(style.zIndex, 10) : 0;
 

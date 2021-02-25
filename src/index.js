@@ -1,24 +1,24 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import SensitiveArea from './sensitive-area';
+
+let tooltipTimeout;
+let hideTooltipTimeout;
 
 const ElegantReactTooltip = ({
   delayBeforeTooltip,
   keepTooltipAlive,
   ...rest
 }) => {
-  const tooltipTimeout = useRef();
-  const hideTooltipTimeout = useRef();
-
   const [visible, setVisible] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [selected, setSelected] = useState(null);
   const [position, setPosition] = useState({});
 
   const enableTooltip = (id, newPosition) => {
-    clearTimeout(tooltipTimeout.current);
-    tooltipTimeout.current = setTimeout(() => {
+    clearTimeout(tooltipTimeout);
+    tooltipTimeout = setTimeout(() => {
       setVisible(true);
     }, delayBeforeTooltip);
 
@@ -28,8 +28,8 @@ const ElegantReactTooltip = ({
   };
 
   const disableTooltip = () => {
-    clearTimeout(hideTooltipTimeout.current);
-    hideTooltipTimeout.current = setTimeout(() => {
+    clearTimeout(hideTooltipTimeout);
+    hideTooltipTimeout = setTimeout(() => {
       if (!enabled) {
         setVisible(false);
       }
