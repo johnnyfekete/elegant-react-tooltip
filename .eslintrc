@@ -1,0 +1,47 @@
+{
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@babel/eslint-parser",
+  "extends": ["react-app", "airbnb", "prettier", "prettier/react"],
+  "plugins": ["react-hooks", "prettier"],
+  "rules": {
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true
+      }
+    ],
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": true,
+        "trailingComma": "all"
+      }
+    ],
+    "react-hooks/exhaustive-deps": "off",
+    "react/prefer-stateless-function": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-no-literals": [
+      "error",
+      {
+        "noStrings": true,
+        "ignoreProps": true
+      }
+    ],
+    "no-use-before-define": "off",
+    "no-warning-comments": "error",
+    "react/jsx-equals-spacing": "off",
+    "react/jsx-first-prop-new-line": "off",
+    "react/jsx-indent": "off",
+    "react/jsx-indent-props": "off",
+    "react/jsx-max-props-per-line": "off",
+    "react/jsx-tag-spacing": "off",
+    "react/jsx-wrap-multilines": "off",
+    "react/prop-types": "off",
+    "react/forbid-prop-types": "off",
+    "react/no-array-index-key": "off"
+  }
+}

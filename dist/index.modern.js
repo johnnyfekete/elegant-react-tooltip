@@ -1,4 +1,4 @@
-import React, { Component, useState, Fragment as Fragment$1 } from 'react';
+import React, { useState, useRef, useEffect, Fragment as Fragment$1 } from 'react';
 
 function _extends() {
   _extends = Object.assign || function (target) {
@@ -16,12 +16,6 @@ function _extends() {
   };
 
   return _extends.apply(this, arguments);
-}
-
-function _inheritsLoose(subClass, superClass) {
-  subClass.prototype = Object.create(superClass.prototype);
-  subClass.prototype.constructor = subClass;
-  subClass.__proto__ = superClass;
 }
 
 function _objectWithoutPropertiesLoose(source, excluded) {
@@ -27687,84 +27681,67 @@ var topGutter = 7;
 var leftGutter = 7;
 var rightGutter = 7;
 
-var Tooltip = /*#__PURE__*/function (_Component) {
-  _inheritsLoose(Tooltip, _Component);
+var Tooltip = function Tooltip(_ref) {
+  var position = _ref.position,
+      label = _ref.label;
 
-  function Tooltip(props) {
-    var _this;
+  var _useState = useState(null),
+      width = _useState[0],
+      setWidth = _useState[1];
 
-    _this = _Component.call(this, props) || this;
-    _this.tooltipRef = React.createRef();
-    _this.tooltipContainerElement = document.createElement('div');
-    var highestZ = getHighestZ();
-    _this.tooltipContainerElement.style.zIndex = highestZ + 1;
-    _this.state = {
-      width: null,
-      visible: false,
-      highestZ: highestZ
+  var _useState2 = useState(false),
+      visible = _useState2[0],
+      setVisible = _useState2[1];
+
+  var _useState3 = useState(getHighestZ()),
+      highestZ = _useState3[0];
+
+  var tooltipRef = useRef();
+  var tooltipContainerElement;
+  useEffect(function () {
+    tooltipContainerElement = document.createElement('div');
+    tooltipContainerElement.style.zIndex = highestZ + 1;
+    document.body.appendChild(tooltipContainerElement);
+    var tooltip = tooltipRef.current;
+    setWidth(tooltip.getElementsByClassName('er-tooltip-content')[0].offsetWidth);
+    setVisible(true);
+    return function () {
+      document.body.removeChild(tooltipContainerElement);
     };
-    return _this;
+  });
+  var top = position.top + position.height + topGutter;
+  var left = position.left + position.width / 2 - width / 2;
+  var arrowStyle = {
+    left: width / 2 + "px"
+  };
+
+  if (left < leftGutter) {
+    left = leftGutter;
+    arrowStyle.left = position.left + position.width / 2 - left + "px";
   }
 
-  var _proto = Tooltip.prototype;
+  if (left + width > window.innerWidth - rightGutter) {
+    left = window.innerWidth - rightGutter - width;
+    arrowStyle.left = position.left + position.width / 2 - left + "px";
+  }
 
-  _proto.componentDidMount = function componentDidMount() {
-    document.body.appendChild(this.tooltipContainerElement);
-    var tooltip = this.tooltipRef.current;
-    this.setState({
-      width: tooltip.getElementsByClassName('er-tooltip-content')[0].offsetWidth,
-      visible: true
-    });
-  };
-
-  _proto.componentWillUnmount = function componentWillUnmount() {
-    document.body.removeChild(this.tooltipContainerElement);
-  };
-
-  _proto.render = function render() {
-    var _this$props = this.props,
-        position = _this$props.position,
-        label = _this$props.label;
-    var _this$state = this.state,
-        width = _this$state.width,
-        visible = _this$state.visible,
-        highestZ = _this$state.highestZ;
-    var top = position.top + position.height + topGutter;
-    var left = position.left + position.width / 2 - width / 2;
-    var arrowStyle = {
-      left: width / 2 + "px"
-    };
-
-    if (left < leftGutter) {
-      left = leftGutter;
-      arrowStyle.left = position.left + position.width / 2 - left + "px";
-    }
-
-    if (left + width > window.innerWidth - rightGutter) {
-      left = window.innerWidth - rightGutter - width;
-      arrowStyle.left = position.left + position.width / 2 - left + "px";
-    }
-
-    return reactDom.createPortal( /*#__PURE__*/React.createElement("div", {
-      className: "er-tooltip",
-      style: _extends(_extends({}, styles.tooltip), {}, {
-        left: left + "px",
-        top: top + "px",
-        opacity: visible ? 1 : 0,
-        zIndex: highestZ + 1
-      }),
-      ref: this.tooltipRef
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "er-tooltip-content",
-      style: styles.tooltipContent
-    }, label), /*#__PURE__*/React.createElement("span", {
-      className: "er-tooltip-arrow",
-      style: _extends(_extends({}, styles.tooltipArrow), arrowStyle)
-    })), this.tooltipContainerElement);
-  };
-
-  return Tooltip;
-}(Component);
+  return /*#__PURE__*/reactDom.createPortal( /*#__PURE__*/React.createElement("div", {
+    className: "er-tooltip",
+    style: _extends(_extends({}, styles.tooltip), {}, {
+      left: left + "px",
+      top: top + "px",
+      opacity: visible ? 1 : 0,
+      zIndex: highestZ + 1
+    }),
+    ref: tooltipRef
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "er-tooltip-content",
+    style: styles.tooltipContent
+  }, label), /*#__PURE__*/React.createElement("span", {
+    className: "er-tooltip-arrow",
+    style: _extends(_extends({}, styles.tooltipArrow), arrowStyle)
+  })), tooltipContainerElement);
+};
 
 var getHighestZ = function getHighestZ() {
   var highestZIndex = 0;
@@ -27870,74 +27847,61 @@ SensitiveArea.defaultProps = {
   selected: null
 };
 
-var tooltipState = {
-  enabled: false,
-  visible: false,
-  selected: null,
-  position: {}
-};
-var tooltipTimeout;
-var hideTooltipTimeout;
+var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
+  var delayBeforeTooltip = _ref.delayBeforeTooltip,
+      keepTooltipAlive = _ref.keepTooltipAlive,
+      rest = _objectWithoutPropertiesLoose(_ref, ["delayBeforeTooltip", "keepTooltipAlive"]);
 
-var ElegantReactTooltip = /*#__PURE__*/function (_Component) {
-  _inheritsLoose(ElegantReactTooltip, _Component);
+  var tooltipTimeout = useRef();
+  var hideTooltipTimeout = useRef();
 
-  function ElegantReactTooltip(props) {
-    var _this;
+  var _useState = useState(false),
+      visible = _useState[0],
+      setVisible = _useState[1];
 
-    _this = _Component.call(this, props) || this;
+  var _useState2 = useState(false),
+      enabled = _useState2[0],
+      setEnabled = _useState2[1];
 
-    _this.enableTooltip = function (id, position) {
-      clearTimeout(tooltipTimeout);
-      tooltipTimeout = setTimeout(function () {
-        tooltipState.visible = true;
+  var _useState3 = useState(null),
+      selected = _useState3[0],
+      setSelected = _useState3[1];
 
-        _this.setState({});
-      }, _this.state.delayBeforeTooltip);
-      tooltipState.enabled = true;
-      tooltipState.selected = id;
-      tooltipState.position = position;
+  var _useState4 = useState({}),
+      position = _useState4[0],
+      setPosition = _useState4[1];
 
-      _this.setState({});
-    };
-
-    _this.disableTooltip = function () {
-      clearTimeout(hideTooltipTimeout);
-      hideTooltipTimeout = setTimeout(function () {
-        if (!tooltipState.enabled) {
-          tooltipState.visible = false;
-
-          _this.setState({});
-        }
-      }, _this.state.keepTooltipAlive);
-      tooltipState.enabled = false;
-      tooltipState.selected = null;
-      tooltipState.position = {};
-
-      _this.setState({});
-    };
-
-    _this.state = {
-      delayBeforeTooltip: props.delayBeforeTooltip,
-      keepTooltipAlive: props.keepTooltipAlive
-    };
-    return _this;
-  }
-
-  var _proto = ElegantReactTooltip.prototype;
-
-  _proto.render = function render() {
-    var _this$props = this.props,
-        rest = _objectWithoutPropertiesLoose(_this$props, ["delayBeforeTooltip", "keepTooltipAlive"]);
-
-    return /*#__PURE__*/React.createElement(SensitiveArea, _extends({}, rest, {
-      enableTooltip: this.enableTooltip,
-      disableTooltip: this.disableTooltip
-    }, tooltipState));
+  enableTooltip = function enableTooltip(id, position) {
+    clearTimeout(tooltipTimeout.current);
+    tooltipTimeout.current = setTimeout(function () {
+      setVisible(true);
+    }, delayBeforeTooltip);
+    setEnabled(true);
+    setSelected(id);
+    setPosition(position);
   };
 
-  return ElegantReactTooltip;
-}(Component);
+  disableTooltip = function disableTooltip() {
+    clearTimeout(hideTooltipTimeout.current);
+    hideTooltipTimeout.current = setTimeout(function () {
+      if (!enabled) {
+        setVisible(false);
+      }
+    }, keepTooltipAlive);
+    setEnabled(false);
+    setSelected(null);
+    tsetPosition({});
+  };
+
+  return /*#__PURE__*/React.createElement(SensitiveArea, _extends({}, rest, {
+    enableTooltip: enableTooltip,
+    disableTooltip: disableTooltip,
+    enabled: enabled,
+    visible: visible,
+    selected: selected,
+    position: position
+  }));
+};
 
 ElegantReactTooltip.propTypes = {
   tag: propTypes.string,

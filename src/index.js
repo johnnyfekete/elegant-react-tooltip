@@ -1,80 +1,70 @@
-import React, { Component } from 'react';
+/* eslint-disable react/jsx-props-no-spreading */
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import SensitiveArea from './sensitive-area';
 
-const tooltipState = {
-  enabled: false,
-  visible: false,
-  selected: null,
-  position: {}
-};
+const ElegantReactTooltip = ({
+  delayBeforeTooltip,
+  keepTooltipAlive,
+  ...rest
+}) => {
+  const tooltipTimeout = useRef();
+  const hideTooltipTimeout = useRef();
 
-let tooltipTimeout;
-let hideTooltipTimeout;
+  const [visible, setVisible] = useState(false);
+  const [enabled, setEnabled] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const [position, setPosition] = useState({});
 
-class ElegantReactTooltip extends Component {
-  constructor(props) {
-    super(props);
-  
-    this.state = {
-      delayBeforeTooltip: props.delayBeforeTooltip,
-      keepTooltipAlive: props.keepTooltipAlive
-    }
-  }
+  const enableTooltip = (id, newPosition) => {
+    clearTimeout(tooltipTimeout.current);
+    tooltipTimeout.current = setTimeout(() => {
+      setVisible(true);
+    }, delayBeforeTooltip);
 
-  enableTooltip = (id, position) => {
-    clearTimeout(tooltipTimeout);
-    tooltipTimeout = setTimeout(() => {
-      tooltipState.visible = true;
-      this.setState({});
-    }, this.state.delayBeforeTooltip);
+    setEnabled(true);
+    setSelected(id);
+    setPosition(newPosition);
+  };
 
-    tooltipState.enabled = true;
-    tooltipState.selected = id;
-    tooltipState.position = position;
-    this.setState({});
-  }
-
-  disableTooltip = () => {
-    clearTimeout(hideTooltipTimeout);
-    hideTooltipTimeout = setTimeout(() => {
-      if (!tooltipState.enabled) {
-        tooltipState.visible = false;
-        this.setState({});
+  const disableTooltip = () => {
+    clearTimeout(hideTooltipTimeout.current);
+    hideTooltipTimeout.current = setTimeout(() => {
+      if (!enabled) {
+        setVisible(false);
       }
-    }, this.state.keepTooltipAlive);
+    }, keepTooltipAlive);
 
-    tooltipState.enabled = false;
-    tooltipState.selected = null;
-    tooltipState.position = {};
-    this.setState({});
-  }
+    setEnabled(false);
+    setSelected(null);
+    setPosition({});
+  };
 
-  render() {
-    const { delayBeforeTooltip, keepTooltipAlive, ...rest } = this.props;
-    return (
-      <SensitiveArea
-        {...rest}
-        enableTooltip={this.enableTooltip}
-        disableTooltip={this.disableTooltip}
-        {...tooltipState}
-      />
-    );
-  }
-}
+  return (
+    <SensitiveArea
+      {...rest}
+      enableTooltip={enableTooltip}
+      disableTooltip={disableTooltip}
+      enabled={enabled}
+      visible={visible}
+      selected={selected}
+      position={position}
+    />
+  );
+};
 
 ElegantReactTooltip.propTypes = {
   tag: PropTypes.string,
   label: PropTypes.string,
   delayBeforeTooltip: PropTypes.number,
-  keepTooltipAlive: PropTypes.number
-}
+  keepTooltipAlive: PropTypes.number,
+};
 
 ElegantReactTooltip.defaultProps = {
   tag: 'div',
   label: '',
   delayBeforeTooltip: 500,
-  keepTooltipAlive: 1000
-}
+  keepTooltipAlive: 1000,
+};
 
 export default ElegantReactTooltip;

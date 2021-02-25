@@ -1,9 +1,11 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable no-bitwise */
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from './tooltip';
 
 const uuidv4 = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
     const r = (Math.random() * 16) | 0;
     const v = c === 'x' ? r : (r & 0x3) | 0x8;
     return v.toString(16);
@@ -26,9 +28,9 @@ const SensitiveArea = ({
   const [uuid] = useState(uuidv4());
 
   return (
-    <Fragment>
+    <>
       <component.tag
-        onMouseEnter={e => {
+        onMouseEnter={(e) => {
           enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
         }}
         onMouseLeave={() => disableTooltip()}
@@ -39,7 +41,7 @@ const SensitiveArea = ({
       {visible && selected === uuid && (
         <Tooltip label={label} position={position} />
       )}
-    </Fragment>
+    </>
   );
 };
 
@@ -52,14 +54,14 @@ SensitiveArea.propTypes = {
   visible: PropTypes.bool.isRequired,
   enabled: PropTypes.bool.isRequired,
   selected: PropTypes.string,
-  position: PropTypes.object.isRequired
+  position: PropTypes.object.isRequired,
 };
 
 SensitiveArea.defaultProps = {
   tag: 'div',
   label: '',
   children: null,
-  selected: null
+  selected: null,
 };
 
 export default SensitiveArea;
