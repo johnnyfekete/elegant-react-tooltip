@@ -26805,7 +26805,7 @@ var styles = {
     borderRadius: '0.125rem',
     fontSize: '0.75rem',
     color: '#ecebed',
-    whiteSpace: 'nowrap'
+    textAlign: 'center'
   },
   tooltipArrow: {
     width: '0',
@@ -26846,6 +26846,7 @@ var SensitiveArea = function SensitiveArea(_ref) {
   var _useState = useState(uuidv4()),
       uuid = _useState[0];
 
+  var wVisible = window.tooltipVisible;
   return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement(component.tag, _extends({
     onMouseEnter: function onMouseEnter(e) {
       enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
@@ -26853,7 +26854,7 @@ var SensitiveArea = function SensitiveArea(_ref) {
     onMouseLeave: function onMouseLeave() {
       return disableTooltip();
     }
-  }, rest), children), visible && selected === uuid && /*#__PURE__*/React.createElement(Tooltip, {
+  }, rest), children), (visible || wVisible) && selected === uuid && /*#__PURE__*/React.createElement(Tooltip, {
     label: label,
     position: position
   }));
@@ -26877,8 +26878,9 @@ SensitiveArea.defaultProps = {
   selected: null
 };
 
-var tooltipTimeout;
-var hideTooltipTimeout;
+window.tooltipTimeout = null;
+window.hideTooltipTimeout = null;
+window.tootltipVisible = false;
 
 var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
   var delayBeforeTooltip = _ref.delayBeforeTooltip,
@@ -26901,10 +26903,18 @@ var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
       position = _useState4[0],
       setPosition = _useState4[1];
 
+  useEffect(function () {
+    return function () {
+      clearTimeout(window.tooltipTimeout);
+      clearTimeout(window.hideTooltipTimeout);
+    };
+  }, []);
+
   var enableTooltip = function enableTooltip(id, newPosition) {
-    clearTimeout(tooltipTimeout);
-    tooltipTimeout = setTimeout(function () {
+    clearTimeout(window.tooltipTimeout);
+    window.tooltipTimeout = setTimeout(function () {
       setVisible(true);
+      window.tooltipVisible = true;
     }, delayBeforeTooltip);
     setEnabled(true);
     setSelected(id);
@@ -26912,11 +26922,10 @@ var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
   };
 
   var disableTooltip = function disableTooltip() {
-    clearTimeout(hideTooltipTimeout);
-    hideTooltipTimeout = setTimeout(function () {
-      if (!enabled) {
-        setVisible(false);
-      }
+    clearTimeout(window.hideTooltipTimeout);
+    window.hideTooltipTimeout = setTimeout(function () {
+      setVisible(false);
+      window.tooltipVisible = false;
     }, keepTooltipAlive);
     setEnabled(false);
     setSelected(null);
@@ -26943,7 +26952,7 @@ ElegantReactTooltip.defaultProps = {
   tag: 'div',
   label: '',
   delayBeforeTooltip: 500,
-  keepTooltipAlive: 1000
+  keepTooltipAlive: 2000
 };
 
 export default ElegantReactTooltip;
