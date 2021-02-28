@@ -27,6 +27,8 @@ const SensitiveArea = ({
   const component = { tag };
   const [uuid] = useState(uuidv4());
 
+  const wVisible = window.tooltipVisible;
+
   return (
     <>
       <component.tag
@@ -38,7 +40,7 @@ const SensitiveArea = ({
       >
         {children}
       </component.tag>
-      {visible && selected === uuid && (
+      {(visible || wVisible) && selected === uuid && (
         <Tooltip label={label} position={position} />
       )}
     </>

@@ -93,7 +93,7 @@ const Tooltip = ({ position, label }) => {
 const getHighestZ = () => {
   let highestZIndex = 0;
   const elements = document.querySelectorAll('*');
-  elements.forEach(element => {
+  elements.forEach((element) => {
     const style = getComputedStyle(element);
     const zIndex = style.zIndex ? parseInt(style.zIndex, 10) : 0;
 
@@ -106,6 +106,7 @@ const getHighestZ = () => {
 };
 
 Tooltip.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   position: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
 };
@@ -128,7 +129,7 @@ const styles = {
     borderRadius: '0.125rem',
     fontSize: '0.75rem',
     color: '#ecebed',
-    whiteSpace: 'nowrap',
+    textAlign: 'center',
   },
 
   tooltipArrow: {
