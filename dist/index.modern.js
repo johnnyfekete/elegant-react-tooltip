@@ -26849,10 +26849,14 @@ var SensitiveArea = function SensitiveArea(_ref) {
   var wVisible = window.tooltipVisible;
   return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement(component.tag, _extends({
     onMouseEnter: function onMouseEnter(e) {
-      enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+      if (label && label.length > 0) {
+        enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+      }
     },
     onMouseLeave: function onMouseLeave() {
-      return disableTooltip();
+      if (label && label.length > 0) {
+        disableTooltip();
+      }
     }
   }, rest), children), (visible || wVisible) && selected === uuid && /*#__PURE__*/React.createElement(Tooltip, {
     label: label,

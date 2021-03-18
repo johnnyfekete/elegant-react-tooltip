@@ -26852,10 +26852,14 @@ var SensitiveArea = function SensitiveArea(_ref) {
   var wVisible = window.tooltipVisible;
   return /*#__PURE__*/React__default.createElement(React.Fragment, null, /*#__PURE__*/React__default.createElement(component.tag, _extends({
     onMouseEnter: function onMouseEnter(e) {
-      enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+      if (label && label.length > 0) {
+        enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+      }
     },
     onMouseLeave: function onMouseLeave() {
-      return disableTooltip();
+      if (label && label.length > 0) {
+        disableTooltip();
+      }
     }
   }, rest), children), (visible || wVisible) && selected === uuid && /*#__PURE__*/React__default.createElement(Tooltip, {
     label: label,
