@@ -33,9 +33,15 @@ const SensitiveArea = ({
     <>
       <component.tag
         onMouseEnter={(e) => {
-          enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+          if (label && label.length > 0) {
+            enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+          }
         }}
-        onMouseLeave={() => disableTooltip()}
+        onMouseLeave={() => {
+          if (label && label.length > 0) {
+            disableTooltip();
+          }
+        }}
         {...rest}
       >
         {children}
