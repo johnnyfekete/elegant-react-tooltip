@@ -10,6 +10,7 @@ window.tootltipVisible = false;
 const ElegantReactTooltip = ({
   delayBeforeTooltip,
   keepTooltipAlive,
+  disabled,
   ...rest
 }) => {
   const [visible, setVisible] = useState(false);
@@ -55,8 +56,8 @@ const ElegantReactTooltip = ({
       {...rest}
       enableTooltip={enableTooltip}
       disableTooltip={disableTooltip}
-      enabled={enabled}
-      visible={visible}
+      enabled={enabled && !disabled}
+      visible={visible && !disabled}
       selected={selected}
       position={position}
     />
@@ -68,6 +69,7 @@ ElegantReactTooltip.propTypes = {
   label: PropTypes.string,
   delayBeforeTooltip: PropTypes.number,
   keepTooltipAlive: PropTypes.number,
+  disabled: PropTypes.bool,
 };
 
 ElegantReactTooltip.defaultProps = {
@@ -75,6 +77,7 @@ ElegantReactTooltip.defaultProps = {
   label: '',
   delayBeforeTooltip: 500,
   keepTooltipAlive: 2000,
+  disabled: false,
 };
 
 export default ElegantReactTooltip;
