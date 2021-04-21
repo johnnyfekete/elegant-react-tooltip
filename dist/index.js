@@ -26892,7 +26892,8 @@ window.tootltipVisible = false;
 var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
   var delayBeforeTooltip = _ref.delayBeforeTooltip,
       keepTooltipAlive = _ref.keepTooltipAlive,
-      rest = _objectWithoutPropertiesLoose(_ref, ["delayBeforeTooltip", "keepTooltipAlive"]);
+      disabled = _ref.disabled,
+      rest = _objectWithoutPropertiesLoose(_ref, ["delayBeforeTooltip", "keepTooltipAlive", "disabled"]);
 
   var _useState = React.useState(false),
       visible = _useState[0],
@@ -26942,8 +26943,8 @@ var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
   return /*#__PURE__*/React__default.createElement(SensitiveArea, _extends({}, rest, {
     enableTooltip: enableTooltip,
     disableTooltip: disableTooltip,
-    enabled: enabled,
-    visible: visible,
+    enabled: enabled && !disabled,
+    visible: visible && !disabled,
     selected: selected,
     position: position
   }));
@@ -26953,13 +26954,15 @@ ElegantReactTooltip.propTypes = {
   tag: PropTypes.string,
   label: PropTypes.string,
   delayBeforeTooltip: PropTypes.number,
-  keepTooltipAlive: PropTypes.number
+  keepTooltipAlive: PropTypes.number,
+  disabled: PropTypes.bool
 };
 ElegantReactTooltip.defaultProps = {
   tag: 'div',
   label: '',
   delayBeforeTooltip: 500,
-  keepTooltipAlive: 2000
+  keepTooltipAlive: 2000,
+  disabled: false
 };
 
 module.exports = ElegantReactTooltip;
