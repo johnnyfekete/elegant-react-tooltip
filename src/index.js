@@ -58,6 +58,7 @@ const ElegantReactTooltip = ({
       disableTooltip={disableTooltip}
       enabled={enabled && !disabled}
       visible={visible && !disabled}
+      disabled={disabled}
       selected={selected}
       position={position}
     />

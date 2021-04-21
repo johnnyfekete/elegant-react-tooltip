@@ -26840,7 +26840,8 @@ var SensitiveArea = function SensitiveArea(_ref) {
       visible = _ref.visible,
       selected = _ref.selected,
       position = _ref.position,
-      rest = _objectWithoutPropertiesLoose(_ref, ["label", "tag", "children", "enableTooltip", "disableTooltip", "visible", "selected", "position", "enabled"]);
+      disabled = _ref.disabled,
+      rest = _objectWithoutPropertiesLoose(_ref, ["label", "tag", "children", "enableTooltip", "disableTooltip", "visible", "selected", "position", "enabled", "disabled"]);
 
   var component = {
     tag: tag
@@ -26861,7 +26862,7 @@ var SensitiveArea = function SensitiveArea(_ref) {
         disableTooltip();
       }
     }
-  }, rest), children), (visible || wVisible) && selected === uuid && /*#__PURE__*/React__default.createElement(Tooltip, {
+  }, rest), children), !disabled && (visible || wVisible) && selected === uuid && /*#__PURE__*/React__default.createElement(Tooltip, {
     label: label,
     position: position
   }));
@@ -26875,6 +26876,7 @@ SensitiveArea.propTypes = {
   disableTooltip: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   enabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   selected: PropTypes.string,
   position: PropTypes.object.isRequired
 };
@@ -26882,7 +26884,8 @@ SensitiveArea.defaultProps = {
   tag: 'div',
   label: '',
   children: null,
-  selected: null
+  selected: null,
+  disabled: false
 };
 
 window.tooltipTimeout = null;
@@ -26945,6 +26948,7 @@ var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
     disableTooltip: disableTooltip,
     enabled: enabled && !disabled,
     visible: visible && !disabled,
+    disabled: disabled,
     selected: selected,
     position: position
   }));

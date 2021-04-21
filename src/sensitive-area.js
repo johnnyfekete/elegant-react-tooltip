@@ -22,6 +22,7 @@ const SensitiveArea = ({
   selected,
   position,
   enabled,
+  disabled,
   ...rest
 }) => {
   const component = { tag };
@@ -46,7 +47,7 @@ const SensitiveArea = ({
       >
         {children}
       </component.tag>
-      {(visible || wVisible) && selected === uuid && (
+      {!disabled && (visible || wVisible) && selected === uuid && (
         <Tooltip label={label} position={position} />
       )}
     </>
@@ -61,6 +62,7 @@ SensitiveArea.propTypes = {
   disableTooltip: PropTypes.func.isRequired,
   visible: PropTypes.bool.isRequired,
   enabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   selected: PropTypes.string,
   position: PropTypes.object.isRequired,
 };
@@ -70,6 +72,7 @@ SensitiveArea.defaultProps = {
   label: '',
   children: null,
   selected: null,
+  disabled: false,
 };
 
 export default SensitiveArea;
