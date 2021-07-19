@@ -67,7 +67,7 @@ const ElegantReactTooltip = ({
 
 ElegantReactTooltip.propTypes = {
   tag: PropTypes.string,
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   delayBeforeTooltip: PropTypes.number,
   keepTooltipAlive: PropTypes.number,
   disabled: PropTypes.bool,

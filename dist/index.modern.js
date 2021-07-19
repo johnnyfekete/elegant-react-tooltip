@@ -27787,14 +27787,13 @@ var getHighestZ = function getHighestZ() {
 
 Tooltip.propTypes = {
   position: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]).isRequired
 };
 var styles = {
   tooltip: {
     position: 'absolute'
   },
   tooltipContent: {
-    position: 'fixed',
     width: 'fit-content',
     maxWidth: '150px',
     backgroundColor: '#0f0b11',
@@ -27846,14 +27845,15 @@ var SensitiveArea = function SensitiveArea(_ref) {
       uuid = _useState[0];
 
   var wVisible = window.tooltipVisible;
+  var hasLabel = label && (typeof label === 'string' && label.length > 0 || typeof label === 'object');
   return /*#__PURE__*/React.createElement(Fragment, null, /*#__PURE__*/React.createElement(component.tag, _extends({
     onMouseEnter: function onMouseEnter(e) {
-      if (label && label.length > 0) {
-        enableTooltip(uuid, e.currentTarget.getBoundingClientRect());
+      if (hasLabel) {
+        enableTooltip(uuid, getCoordinates(e.currentTarget));
       }
     },
     onMouseLeave: function onMouseLeave() {
-      if (label && label.length > 0) {
+      if (hasLabel) {
         disableTooltip();
       }
     }
@@ -27865,7 +27865,7 @@ var SensitiveArea = function SensitiveArea(_ref) {
 
 SensitiveArea.propTypes = {
   tag: PropTypes.string,
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   children: PropTypes.node,
   enableTooltip: PropTypes.func.isRequired,
   disableTooltip: PropTypes.func.isRequired,
@@ -27881,6 +27881,16 @@ SensitiveArea.defaultProps = {
   children: null,
   selected: null,
   disabled: false
+};
+
+var getCoordinates = function getCoordinates(element) {
+  var rect = element.getBoundingClientRect();
+  return {
+    top: rect.top + window.scrollY,
+    left: rect.left + window.scrollX,
+    width: rect.width,
+    height: rect.height
+  };
 };
 
 window.tooltipTimeout = null;
@@ -27951,7 +27961,7 @@ var ElegantReactTooltip = function ElegantReactTooltip(_ref) {
 
 ElegantReactTooltip.propTypes = {
   tag: PropTypes.string,
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   delayBeforeTooltip: PropTypes.number,
   keepTooltipAlive: PropTypes.number,
   disabled: PropTypes.bool
