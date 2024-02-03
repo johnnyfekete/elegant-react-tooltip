@@ -1,6 +1,6 @@
 {
   "name": "elegant-react-tooltip",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "A simple tooltip component that automatically positions itself and provides a seamless user experience",
   "keywords": [
     "react",
@@ -36,7 +36,7 @@
     "lint": "eslint 'src/**/*.{js,jsx,ts,tsx}'"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": "^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",
